@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_Thai } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// ✅ ใช้ className แทน variable
+const notoSansThai = Noto_Sans_Thai({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "700"], // เพิ่มน้ำหนักถ้าต้องการ
+  display: "swap",         // เพิ่มเพื่อ performance
 });
 
 export const metadata: Metadata = {
@@ -24,9 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${notoSansThai.className} antialiased`}>
         {children}
       </body>
     </html>
