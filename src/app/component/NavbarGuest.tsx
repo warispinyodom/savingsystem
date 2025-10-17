@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { Home, Briefcase, Users } from "lucide-react";
+import { Home, Briefcase, Users, LogIn, UserPlus } from "lucide-react";
 
 export default function NavbarGuest() {
 
@@ -23,17 +23,17 @@ export default function NavbarGuest() {
                     </div>
                     <Button asChild variant="link" className="text-xl text-white transition-all duration-300 hover:scale-105">
                         <Link href="/">
-                            หน้าแรก
+                            <Home/>หน้าแรก
                         </Link>
                     </Button>
                     <Button asChild variant="link" className="text-xl text-white transition-all duration-300 hover:scale-105">
                         <Link href="/">
-                            บริการ
+                            <Briefcase/>บริการ
                         </Link>
                     </Button>
                     <Button asChild variant="link" className="text-xl text-white transition-all duration-300 hover:scale-105">
                         <Link href="/">
-                            เกี่ยวกับเรา
+                            <Users/>เกี่ยวกับเรา
                         </Link>
                     </Button>
                 </div>
@@ -41,12 +41,12 @@ export default function NavbarGuest() {
                     {/* เนื้อหาสำหรับปุ่ม login logout */}
                     <Button asChild className="text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                         <Link href="/auth/login">
-                            เข้าสู่ระบบ
+                            <LogIn/>เข้าสู่ระบบ
                         </Link>
                     </Button>
                     <Button asChild className="text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                         <Link href="/auth/register">
-                            สมัครสมาชิก
+                            <UserPlus/>สมัครสมาชิก
                         </Link>
                     </Button>
                 </div>
@@ -79,12 +79,12 @@ export default function NavbarGuest() {
                                 </Link>
                                 <Button asChild className="shadow-md text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                                     <Link href="/auth/login" className="">
-                                        เข้าสู่ระบบ
+                                        <LogIn/>เข้าสู่ระบบ
                                     </Link>
                                 </Button>
                                 <Button asChild className="shadow-md text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                                     <Link href="/auth/register" className="">
-                                        สมัครสมาชิก
+                                        <UserPlus/>สมัครสมาชิก
                                     </Link>
                                 </Button>
                             </div>
