@@ -15,44 +15,44 @@ export default function NavbarGuest() {
 
     return (
         <section>
-            {/* เราจะสร้าง navbar ที่หน้านี้เพื่อให้เกิดเป็น component ไว้เรียกใช้งานหลายหน้า  */}
-            <div className="bg-[#FF9B00] p-6 flex justify-between items-center shadow-md hidden md:flex">
+            {/* เราจะสร้าง navbar ที่หน้านี้เพื่อให้เกิดเป็น component ไว้เรียกใช้งานหลายหน้า*/}
+            <div className="fixed top-0 right-0 w-full bg-[#FF9B00] p-6 flex justify-between items-center shadow-md hidden md:flex z-50">
                 <div className="section-left flex items-center gap-6">
                     <div className="section-logo transition-all duration-300 hover:scale-105">
                         <img src="/globe.svg" alt="" width={48} height={48} />
                     </div>
                     <Button asChild variant="link" className="text-xl text-white transition-all duration-300 hover:scale-105">
                         <Link href="/">
-                            <Home/>หน้าแรก
+                            <Home />หน้าแรก
                         </Link>
                     </Button>
                     <Button asChild variant="link" className="text-xl text-white transition-all duration-300 hover:scale-105">
                         <Link href="/">
-                            <Briefcase/>บริการ
+                            <Briefcase />บริการ
                         </Link>
                     </Button>
                     <Button asChild variant="link" className="text-xl text-white transition-all duration-300 hover:scale-105">
                         <Link href="/">
-                            <Users/>เกี่ยวกับเรา
+                            <Users />เกี่ยวกับเรา
                         </Link>
                     </Button>
                 </div>
                 <div className="section-right flex items-center gap-6">
                     {/* เนื้อหาสำหรับปุ่ม login logout */}
-                    <Button asChild className="text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
+                    <Button asChild className="text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105 z-50">
                         <Link href="/auth/login">
-                            <LogIn/>เข้าสู่ระบบ
+                            <LogIn />เข้าสู่ระบบ
                         </Link>
                     </Button>
                     <Button asChild className="text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                         <Link href="/auth/register">
-                            <UserPlus/>สมัครสมาชิก
+                            <UserPlus />สมัครสมาชิก
                         </Link>
                     </Button>
                 </div>
             </div>
             {/* mobile navbar menu */}
-            <div className="bg-[#FF9B00] p-6 flex justify-between items-center shadow-md flex md:hidden">
+            <div className="fixed top-0 right-0 w-full bg-[#FF9B00] p-6 flex justify-between items-center shadow-md flex md:hidden z-50">
                 <div className="section-left">
                     <img className="transition-all duration-300 hover:scale-105" src="/globe.svg" alt="" width={48} height={48} />
                 </div>
@@ -66,25 +66,25 @@ export default function NavbarGuest() {
                         <div className="absolute bg-white shadow-md p-6 right-10 rounded-md">
                             <div className="flex flex-col gap-4">
                                 <Link href="/" className="flex items-center gap-2 text-lg font-medium text-[#FF9B00] transition-all duration-300 hover:scale-105">
-                                    <Home/>
+                                    <Home />
                                     หน้าแรก
                                 </Link>
                                 <Link href="/" className="flex items-center gap-2 text-lg font-medium text-[#FF9B00] transition-all duration-300 hover:scale-105">
-                                    <Briefcase/>
+                                    <Briefcase />
                                     บริการ
                                 </Link>
                                 <Link href="/" className="flex items-center gap-2 text-lg font-medium text-[#FF9B00] transition-all duration-300 hover:scale-105">
-                                    <Users/>
+                                    <Users />
                                     เกี่ยวกับเรา
                                 </Link>
                                 <Button asChild className="shadow-md text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                                     <Link href="/auth/login" className="">
-                                        <LogIn/>เข้าสู่ระบบ
+                                        <LogIn />เข้าสู่ระบบ
                                     </Link>
                                 </Button>
                                 <Button asChild className="shadow-md text-xl bg-white text-[#FF9B00] hover:bg-gray-200 rounded-full transition-all duration-300 hover:scale-105">
                                     <Link href="/auth/register" className="">
-                                        <UserPlus/>สมัครสมาชิก
+                                        <UserPlus />สมัครสมาชิก
                                     </Link>
                                 </Button>
                             </div>
@@ -92,13 +92,6 @@ export default function NavbarGuest() {
                     }
                 </div>
             </div>
-
-            {/* ส่วนเนื้อหาของ container ตั้งแต่ banner ไปจน ถึง footer */}
-            <div className="section-banner">
-                <img src="/images/banner.png" alt="banner" />
-            </div>
-            {/* ส่วนของเนื้อหา สำหรับ content รีวิว โปรโมท เกี่ยวกับระบบสามารถทำอะไรได้บ้าง */}
-
         </section>
     )
 }
