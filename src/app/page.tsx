@@ -1,3 +1,5 @@
+import Banner from "./component/Banner";
+import Footer from "./component/Footer";
 import NavbarGuest from "./component/NavbarGuest";
 
 export default function Page() {
@@ -7,14 +9,7 @@ export default function Page() {
 
       <div className="section-homepage mt-[72px] md:mt-=[96px]">
         {/* Banner */}
-        <div className="section-banner">
-          <img
-            src="/images/banner.png"
-            alt="banner"
-            className="w-full h-auto object-cover"
-          />
-        </div>
-
+        <Banner />
         {/* Concept Section */}
         <div className="section-concept p-6 md:px-20 md:py-14 bg-gray-50">
           <div className="text-3xl md:text-4xl text-center font-bold text-gray-800 leading-snug mb-6">
@@ -124,6 +119,8 @@ export default function Page() {
             </a>
           </div>
         </div>
+        {/* footer */}
+        <Footer />
       </div>
     </section>
   );

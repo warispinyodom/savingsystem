@@ -36,7 +36,7 @@ export default function NavbarGuest() {
             asChild
             className="bg-white text-[#FF9B00] hover:bg-gray-100 rounded-full transition hover:scale-105"
           >
-            <Link href="/auth/login">
+            <Link href="/login">
               <LogIn className="mr-2" /> เข้าสู่ระบบ
             </Link>
           </Button>
@@ -44,7 +44,7 @@ export default function NavbarGuest() {
             asChild
             className="bg-white text-[#FF9B00] hover:bg-gray-100 rounded-full transition hover:scale-105"
           >
-            <Link href="/auth/register">
+            <Link href="/register">
               <UserPlus className="mr-2" /> สมัครสมาชิก
             </Link>
           </Button>
@@ -86,7 +86,7 @@ export default function NavbarGuest() {
                   asChild
                   className="w-full bg-white text-[#FF9B00] border hover:bg-gray-100 rounded-full transition"
                 >
-                  <Link href="/auth/login">
+                  <Link href="/login">
                     <LogIn className="mr-2" /> เข้าสู่ระบบ
                   </Link>
                 </Button>
@@ -94,7 +94,7 @@ export default function NavbarGuest() {
                   asChild
                   className="w-full bg-white text-[#FF9B00] border hover:bg-gray-100 rounded-full transition"
                 >
-                  <Link href="/auth/register">
+                  <Link href="/register">
                     <UserPlus className="mr-2" /> สมัครสมาชิก
                   </Link>
                 </Button>
