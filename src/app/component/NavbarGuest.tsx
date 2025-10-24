@@ -23,7 +23,7 @@ export default function NavbarGuest() {
       <div className="fixed top-0 right-0 w-full bg-[#FF9B00] px-6 py-4 md:py-6 flex justify-between items-center shadow-md hidden md:flex z-50">
         <div className="flex items-center gap-6">
           <Link href="/" className="hover:scale-105 transition-all">
-            <img src="/globe.svg" alt="Logo" width={48} height={48} />
+            <img src="/icon.ico" alt="Logo" width={48} height={48} />
           </Link>
 
           <NavLink href="/" icon={<Home size={20} />} text="หน้าแรก" />
