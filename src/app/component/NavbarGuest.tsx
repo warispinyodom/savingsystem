@@ -54,7 +54,7 @@ export default function NavbarGuest() {
       {/* Mobile Navbar */}
       <div className="fixed top-0 right-0 w-full bg-[#FF9B00] px-4 py-4 flex justify-between items-center shadow-md md:hidden z-50">
         <Link href="/" className="hover:scale-105 transition">
-          <img src="/globe.svg" alt="Logo" width={40} height={40} />
+          <img src="/icon.ico" alt="Logo" width={40} height={40} />
         </Link>
 
         <button
