@@ -1,5 +1,5 @@
-// import { NextResponse } from "next/server";
-// import { supabaseAdmin } from "@/lib/supabaseClient";
+import { NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabaseClient";
 
 // // ✅ ใช้ GET เพราะเราจะดึงข้อมูล
 // export async function GET() {
