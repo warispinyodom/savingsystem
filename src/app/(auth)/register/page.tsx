@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Swal from "sweetalert2"
-import { supabase } from "@/lib/supabaseClient"
 
 // 🧩 icons from lucide-react (ใช้ใน shadcn)
 import { User, Mail, Lock, ArrowLeft } from "lucide-react"
@@ -38,18 +37,34 @@ export default function RegisterPage() {
   })
 
   // นี้จะเป็น ระบบเมื่อ กรอกข้อมูลแล้ว หากเรากดสมัครระบบจะทำงาน ตามฟังชั่นที่เราสร้างขึ้น ไม่ว่าจะตรวจสอบข้อมูล หรือ ส่งข้อมูลไปยัง server 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    Swal.fire({
-      icon: 'success',
-      title: 'สมัครสมาชิกสำเร็จ!',
-      text: 'ยินดีต้อนรับสู่แพลตฟอร์มของเรา!',
-      confirmButtonText: 'ตกลง',
-    })
-  }
-  
-  //พื้นที่สำหรับให้ทำ clients supabase ในการรับ serverside และแสดงผล
-  
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!res.ok) throw new Error("สมัครสมาชิกไม่สำเร็จ");
+
+      Swal.fire({
+        icon: 'success',
+        title: 'สมัครสมาชิกสำเร็จ!',
+        text: 'ยินดีต้อนรับสู่แพลตฟอร์มของเรา!',
+        confirmButtonText: 'ตกลง',
+      });
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด!',
+        text: (err as Error).message,
+        confirmButtonText: 'ลองอีกครั้ง',
+      });
+    }
+  };
+
 
   return (
     <section className="register bg-gradient-to-b from-[#FF9B00]/80 to-[#FF6B00]/90 min-h-screen flex items-center justify-center relative">
