@@ -3,8 +3,111 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Mail, Lock } from "lucide-react"
+import { useState } from "react"
+import Swal from "sweetalert2"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const router = useRouter()
+
+  // 🔍 ตรวจสอบ input ก่อนส่ง
+  const validateForm = () => {
+    if (!email || !password || !confirmPassword) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+        confirmButtonColor: "#f97316",
+      })
+      return false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      Swal.fire({
+        icon: "error",
+        title: "อีเมลไม่ถูกต้อง",
+        text: "กรุณากรอกอีเมลให้ถูกต้อง เช่น example@email.com",
+        confirmButtonColor: "#f97316",
+      })
+      return false
+    }
+
+    if (password.length < 6) {
+      Swal.fire({
+        icon: "error",
+        title: "รหัสผ่านสั้นเกินไป",
+        text: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+        confirmButtonColor: "#f97316",
+      })
+      return false
+    }
+
+    if (password !== confirmPassword) {
+      Swal.fire({
+        icon: "error",
+        title: "รหัสผ่านไม่ตรงกัน",
+        text: "กรุณากรอกให้เหมือนกันทั้งสองช่อง",
+        confirmButtonColor: "#f97316",
+      })
+      return false
+    }
+
+    return true
+  }
+
+  // 🚀 ฟังก์ชันสมัครสมาชิก
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!validateForm()) return
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        Swal.fire({
+          icon: "error",
+          title: "สมัครสมาชิกไม่สำเร็จ",
+          text: data.message || "กรุณาลองใหม่อีกครั้ง",
+          confirmButtonColor: "#f97316",
+        })
+        return
+      }
+
+      // ✅ สมัครสำเร็จ
+      Swal.fire({
+        icon: "success",
+        title: "สมัครสมาชิกสำเร็จ!",
+        text: "คุณสามารถเข้าสู่ระบบได้ทันที",
+        confirmButtonColor: "#16a34a",
+      })
+      await router.push("/login")
+      setEmail("")
+      setPassword("")
+      setConfirmPassword("")
+      
+    } catch (err) {
+      console.error(err)
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
+        confirmButtonColor: "#f97316",
+      })
+    }
+  }
+
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-100 via-white to-orange-50 relative">
       {/* ปุ่มย้อนกลับ */}
@@ -27,7 +130,7 @@ export default function RegisterPage() {
           สมัครสมาชิก
         </h1>
 
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleRegister}>
           {/* Email */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
@@ -38,6 +141,8 @@ export default function RegisterPage() {
               <input
                 type="email"
                 placeholder="example@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
               />
             </div>
@@ -53,6 +158,8 @@ export default function RegisterPage() {
               <input
                 type="password"
                 placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
               />
             </div>
@@ -68,6 +175,8 @@ export default function RegisterPage() {
               <input
                 type="password"
                 placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
               />
             </div>
