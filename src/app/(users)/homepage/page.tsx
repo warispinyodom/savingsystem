@@ -21,7 +21,6 @@ export default function UsersHomePage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let particles: Particle[] = [];
     const numParticles = 70;
 
     const resizeCanvas = () => {
@@ -31,20 +30,17 @@ export default function UsersHomePage() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // สร้างอนุภาคสีส้ม
-    for (let i = 0; i < numParticles; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.8,
-        dy: (Math.random() - 0.5) * 0.8,
-        color: `hsl(${30 + Math.random() * 40}, 100%, 70%)`, // สีส้ม/ทอง
-      });
-    }
+    // ใช้ const เพราะ reference ของ array ไม่เปลี่ยน
+    const particles: Particle[] = Array.from({ length: numParticles }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2 + 1,
+      dx: (Math.random() - 0.5) * 0.8,
+      dy: (Math.random() - 0.5) * 0.8,
+      color: `hsl(${30 + Math.random() * 40}, 100%, 70%)`,
+    }));
 
     const draw = () => {
-      if (!ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // พื้นหลัง gradient โทนส้ม
