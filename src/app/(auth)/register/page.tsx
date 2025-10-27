@@ -1,220 +1,96 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import Link from "next/link"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import Swal from "sweetalert2"
-
-// 🧩 icons from lucide-react (ใช้ใน shadcn)
-import { User, Mail, Lock, ArrowLeft } from "lucide-react"
-
-// ✅ Schema สำหรับตรวจสอบข้อมูลฟอร์ม ขั้นตอนการตรวจสอบข้อมูล
-const formSchema = z.object({
-  name: z.string().min(2, { message: "กรุณากรอกชื่อให้ถูกต้อง" }),
-  email: z.string().email({ message: "รูปแบบอีเมลไม่ถูกต้อง" }),
-  password: z.string().min(6, { message: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร" }),
-  confirmPassword: z.string().min(6, { message: "กรุณายืนยันรหัสผ่าน" }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "รหัสผ่านไม่ตรงกัน",
-  path: ["confirmPassword"],
-})
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Mail, Lock } from "lucide-react"
 
 export default function RegisterPage() {
-  // รับข้อมูลจากการกรอกฟอร์ม
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  })
-
-  // นี้จะเป็น ระบบเมื่อ กรอกข้อมูลแล้ว หากเรากดสมัครระบบจะทำงาน ตามฟังชั่นที่เราสร้างขึ้น ไม่ว่าจะตรวจสอบข้อมูล หรือ ส่งข้อมูลไปยัง server 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (!res.ok) throw new Error("สมัครสมาชิกไม่สำเร็จ");
-
-      Swal.fire({
-        icon: 'success',
-        title: 'สมัครสมาชิกสำเร็จ!',
-        text: 'ยินดีต้อนรับสู่แพลตฟอร์มของเรา!',
-        confirmButtonText: 'ตกลง',
-      });
-    } catch (err) {
-      Swal.fire({
-        icon: 'error',
-        title: 'เกิดข้อผิดพลาด!',
-        text: (err as Error).message,
-        confirmButtonText: 'ลองอีกครั้ง',
-      });
-    }
-  };
-
-
   return (
-    <section className="register bg-gradient-to-b from-[#FF9B00]/80 to-[#FF6B00]/90 min-h-screen flex items-center justify-center relative">
+    <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-orange-100 via-white to-orange-50 relative">
       {/* ปุ่มย้อนกลับ */}
-      <Link href="/" className="absolute top-4 left-4 z-50">
+      <div className="absolute top-5 left-5">
         <Button
-          variant="ghost"
-          className="bg-white/90 text-[#FF9B00] hover:bg-white hover:scale-105 rounded-full px-4 py-2 flex items-center gap-2 transition-all shadow"
+          asChild
+          variant="outline"
+          className="rounded-full px-4 py-2 bg-white/80 backdrop-blur border border-orange-200 text-orange-600 hover:bg-orange-50 transition"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>ย้อนกลับ</span>
+          <Link href="/">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            ย้อนกลับ
+          </Link>
         </Button>
-      </Link>
+      </div>
 
-      {/* กล่องสมัครสมาชิก */}
-      <div className="bg-white/95 backdrop-blur-sm p-8 rounded-xl shadow-2xl w-full max-w-md border border-white/40">
-        <h1 className="text-3xl font-extrabold mb-2 text-[#FF9B00] text-center">
+      {/* กล่องฟอร์มสมัคร */}
+      <div className="w-full md:w-[90%] max-w-md md:bg-white/90 md:backdrop-blur-xl md:shadow-lg md:rounded-2xl md:p-10 md:border md:border-orange-100 px-6 py-10">
+        <h1 className="text-3xl font-bold text-center text-orange-600 mb-8">
           สมัครสมาชิก
         </h1>
-        <p className="text-gray-500 text-center mb-6">สร้างบัญชีใหม่ของคุณ</p>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* ชื่อ */}
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="name" className="text-gray-700 flex items-center gap-2">
-                    <User className="w-4 h-4 text-[#FF9B00]" />
-                    ชื่อผู้ใช้
-                  </Label>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        id="name"
-                        placeholder="กรอกชื่อผู้ใช้"
-                        className="pl-10 border-gray-300 focus:border-[#FF9B00] focus:ring-[#FF9B00]"
-                        {...field}
-                      />
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-500 text-sm" />
-                </FormItem>
-              )}
-            />
+        <form className="space-y-5">
+          {/* Email */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              อีเมล
+            </label>
+            <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400 transition">
+              <Mail className="w-5 h-5 text-gray-400 mr-2" />
+              <input
+                type="email"
+                placeholder="example@email.com"
+                className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
+              />
+            </div>
+          </div>
 
-            {/* อีเมล */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="email" className="text-gray-700 flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-[#FF9B00]" />
-                    อีเมล
-                  </Label>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="example@email.com"
-                        className="pl-10 border-gray-300 focus:border-[#FF9B00] focus:ring-[#FF9B00]"
-                        {...field}
-                      />
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-500 text-sm" />
-                </FormItem>
-              )}
-            />
+          {/* Password */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              รหัสผ่าน
+            </label>
+            <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400 transition">
+              <Lock className="w-5 h-5 text-gray-400 mr-2" />
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
+              />
+            </div>
+          </div>
 
-            {/* รหัสผ่าน */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="password" className="text-gray-700 flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-[#FF9B00]" />
-                    รหัสผ่าน
-                  </Label>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="********"
-                        className="pl-10 border-gray-300 focus:border-[#FF9B00] focus:ring-[#FF9B00]"
-                        {...field}
-                      />
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-500 text-sm" />
-                </FormItem>
-              )}
-            />
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
+              ยืนยันรหัสผ่าน
+            </label>
+            <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-orange-400 transition">
+              <Lock className="w-5 h-5 text-gray-400 mr-2" />
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-400"
+              />
+            </div>
+          </div>
 
-            {/* ยืนยันรหัสผ่าน */}
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="confirmPassword" className="text-gray-700 flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-[#FF9B00]" />
-                    ยืนยันรหัสผ่าน
-                  </Label>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="********"
-                        className="pl-10 border-gray-300 focus:border-[#FF9B00] focus:ring-[#FF9B00]"
-                        {...field}
-                      />
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-500 text-sm" />
-                </FormItem>
-              )}
-            />
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg shadow transition-all"
+          >
+            สมัครสมาชิก
+          </Button>
+        </form>
 
-            {/* ปุ่มสมัคร */}
-            <Button
-              type="submit"
-              className="w-full bg-[#FF9B00] hover:bg-[#FF7B00] text-white font-semibold mt-4 shadow-md transition-all hover:scale-[1.02]"
-            >
-              สมัครสมาชิก
-            </Button>
-
-            {/* ลิงก์ไปหน้า Login */}
-            <p className="text-center text-gray-600 mt-4">
-              มีบัญชีอยู่แล้ว?{" "}
-              <Link
-                href="/login"
-                className="underline text-[#FF9B00] hover:text-[#FF7B00] font-medium"
-              >
-                เข้าสู่ระบบ
-              </Link>
-            </p>
-          </form>
-        </Form>
+        <p className="text-center text-gray-600 mt-6 text-sm">
+          มีบัญชีอยู่แล้ว?{" "}
+          <Link
+            href="/login"
+            className="text-orange-500 font-medium hover:underline"
+          >
+            เข้าสู่ระบบ
+          </Link>
+        </p>
       </div>
     </section>
   )
