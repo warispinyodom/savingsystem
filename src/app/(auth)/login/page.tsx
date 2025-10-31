@@ -19,14 +19,23 @@ export default function LoginPage() {
       const data = await res.json()
 
       if (data?.authenticated) {
+        const roles = data.user?.roles
+        const isAdmin =
+          (Array.isArray(roles) && roles.includes("admin")) || roles === "admin"
+
         Swal.fire({
           icon: "info",
           title: "คุณเข้าสู่ระบบแล้ว",
-          text: "กำลังพาไปยังหน้าแรก...",
+          text: "กำลังพาไปยังหน้าที่เหมาะสม...",
           timer: 2000,
           showConfirmButton: false,
         })
-        router.push("/homepage")
+
+        if (isAdmin) {
+          router.push("/adminpage")
+        } else {
+          router.push("/homepage")
+        }
       }
     }
 
@@ -71,7 +80,16 @@ export default function LoginPage() {
         text: `ยินดีต้อนรับ ${data.user.name || data.user.email}`,
         confirmButtonColor: "#16a34a",
       }).then(() => {
-        router.push("/homepage")
+        // 🔄 ตรวจสอบ role ก่อน redirect
+        const roles = data.user.roles
+        const isAdmin =
+          (Array.isArray(roles) && roles.includes("admin")) || roles === "admin"
+
+        if (isAdmin) {
+          router.push("/adminpage")
+        } else {
+          router.push("/homepage")
+        }
       })
     } catch (err) {
       console.error(err)

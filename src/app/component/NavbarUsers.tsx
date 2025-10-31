@@ -27,15 +27,36 @@ export default function NavbarUser() {
       try {
         const res = await fetch("/api/session");
         const data = await res.json();
-        if (data?.user) setUser(data.user);
-        else router.push("/login");
+
+        const user = data?.user;
+        if (!user) {
+          router.push("/login");
+          return;
+        }
+
+        // 🔹 ตรวจสอบ role user (รองรับ string หรือ array)
+        const isUser =
+          (Array.isArray(user.roles) && user.roles.includes("user")) ||
+          user.roles === "user";
+
+        if (!isUser) {
+          // ❌ ลบ session ทาง server
+          await fetch("/api/logout", { method: "POST" });
+          router.push("/login");
+          return;
+        }
+
+        // ✅ เป็น user ให้เข้าถึง
+        setUser(user);
       } catch (error) {
         console.error("Session check failed:", error);
         router.push("/login");
       }
     };
+
     fetchSession();
   }, [router]);
+
 
   // 🔓 ออกจากระบบ
   const handleLogout = async () => {

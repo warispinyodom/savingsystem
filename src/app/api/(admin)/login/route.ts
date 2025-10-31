@@ -29,23 +29,26 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ สร้าง response พร้อม cookie
+    // ✅ สร้าง object user พร้อม roles
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      roles: user.roles || "user", // ถ้าไม่มีค่า roles ให้ default เป็น "user"
+    };
+
+    // ✅ สร้าง response และตั้ง cookie session เก็บข้อมูล user
     const response = NextResponse.json({
       success: true,
       message: "เข้าสู่ระบบสำเร็จ 🎉",
-      user: { id: user.id, email: user.email, name: user.name },
+      user: userData,
     });
 
-    // ✅ ตั้ง cookie session เก็บ email ไว้
-    response.cookies.set(
-      "session",
-      JSON.stringify({ id: user.id, email: user.email }),
-      {
-        httpOnly: true, // ป้องกันการเข้าถึงจาก JavaScript ฝั่ง client
-        path: "/",
-        maxAge: 60 * 60 * 24, // 1 วัน
-      }
-    );
+    response.cookies.set("session", JSON.stringify(userData), {
+      httpOnly: true, // ป้องกัน client JS อ่าน cookie
+      path: "/",
+      maxAge: 60 * 60 * 24, // 1 วัน
+    });
 
     return response;
   } catch (err) {

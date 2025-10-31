@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import NavbarUsers from "@/app/component/NavbarUsers";
+import Gamelist from "@/app/component/Gamelist";
 
 interface Particle {
   x: number;
@@ -17,11 +18,8 @@ export default function UsersHomePage() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
-    const numParticles = 70;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -30,7 +28,8 @@ export default function UsersHomePage() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // ใช้ const เพราะ reference ของ array ไม่เปลี่ยน
+    const numParticles = window.innerWidth < 768 ? 30 : 70; // ลด particle บนมือถือ
+
     const particles: Particle[] = Array.from({ length: numParticles }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -43,40 +42,38 @@ export default function UsersHomePage() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // พื้นหลัง gradient โทนส้ม
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       gradient.addColorStop(0, "#FF9B00");
       gradient.addColorStop(1, "#FFA500");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // วาดอนุภาค
       particles.forEach((p) => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = window.innerWidth < 768 ? 2 : 10; // ลด blur บน mobile
         ctx.shadowColor = p.color;
         ctx.fill();
         ctx.closePath();
 
         p.x += p.dx;
         p.y += p.dy;
-
         if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
       });
 
-      // เส้นเชื่อมระหว่างอนุภาค
+      // เชื่อม particle
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
+          const maxDist = window.innerWidth < 768 ? 60 : 120;
+          if (dist < maxDist) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(255, 200, 0, ${1 - dist / 120})`;
-            ctx.lineWidth = 0.3;
+            ctx.strokeStyle = `rgba(255, 200, 0, ${1 - dist / maxDist})`;
+            ctx.lineWidth = window.innerWidth < 768 ? 0.1 : 0.3;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
@@ -89,24 +86,30 @@ export default function UsersHomePage() {
     };
 
     draw();
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas);
-    };
+    return () => window.removeEventListener("resize", resizeCanvas);
   }, []);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 -z-10 w-full h-full"
-      />
+    <section className="relative w-full overflow-auto min-h-screen">
+      <canvas ref={canvasRef} className="absolute inset-0 -z-10 w-full h-full" />
       <NavbarUsers />
-      <div className="relative mt-[72px] md:mt-[96px] p-6 text-white">
-        <h1 className="text-3xl font-bold mb-4">🎮 เกมที่อยากจะออมเงินเพื่อซื้อ</h1>
-        <p className="text-lg opacity-90">
-          เตรียมรายชื่อเกมของคุณไว้ที่นี่ แล้วเริ่มวางแผนออมเงินไปพร้อมกัน!
+
+      {/* Banner */}
+      <div className="relative mt-[72px] md:mt-[96px] p-6 text-white text-center">
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 animate-pulse">
+          🎮 ออมเงินเพื่อเกมในฝันของคุณ!
+        </h1>
+        <p className="text-lg md:text-xl opacity-90 mb-6">
+          เลือกเกมที่คุณชอบ แล้วเริ่มออมเงินไปพร้อมกัน สนุกง่าย ได้เกมไว!
         </p>
+        <button className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-6 rounded-lg shadow-lg transition-all duration-300">
+          เริ่มออมเงินเลย
+        </button>
+      </div>
+
+      {/* Game List */}
+      <div className="relative p-6 text-white opacity-90">
+        <Gamelist />
       </div>
     </section>
   );
