@@ -12,9 +12,10 @@ export async function POST(req: Request) {
       .from("users")
       .select("id")
       .eq("email", email)
-      .single();
+      .eq("provider", "form") // ตรวจเฉพาะ provider = form
+      .maybeSingle();
 
-    if (fetchError && fetchError.code !== "PGRST116") {
+    if (fetchError) {
       console.error("Fetch error:", fetchError);
       return NextResponse.json(
         { success: false, message: "เกิดข้อผิดพลาด กรุณาลองใหม่ภายหลัง" },
@@ -37,9 +38,10 @@ export async function POST(req: Request) {
     // เพิ่มผู้ใช้ใหม่
     const { data, error } = await supabaseAdmin.from("users").insert({
       email,
-      password: hashedPassword, // เก็บ hashed password
-      name: email.split("@")[0], // ตั้งค่า default name
-    });
+      password: hashedPassword,       // เก็บ hashed password
+      name: email.split("@")[0],       // ตั้งค่า default name
+      provider: "form",                // เพิ่ม provider default
+    }).select().maybeSingle();
 
     if (error) {
       console.error("Insert error:", error);
@@ -52,6 +54,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: "สมัครสมาชิกสำเร็จ 🎉",
+      user: { id: data.id, email: data.email, name: data.name, provider: data.provider }
     });
   } catch (err) {
     console.error(err);

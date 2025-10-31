@@ -12,10 +12,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const router = useRouter()
 
-  // ✅ ถ้ามี session แล้ว ให้ redirect ไปหน้า home ทันที
+  // ✅ ตรวจสอบ session
   useEffect(() => {
     const checkSession = async () => {
-      const res = await fetch("/api/session") // API ตรวจสอบ session
+      const res = await fetch("/api/session")
       const data = await res.json()
 
       if (data?.authenticated) {
@@ -33,7 +33,7 @@ export default function LoginPage() {
     checkSession()
   }, [router])
 
-  // 🚀 ฟังก์ชันเข้าสู่ระบบ
+  // 🚀 ฟังก์ชันเข้าสู่ระบบปกติ
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -65,14 +65,13 @@ export default function LoginPage() {
         return
       }
 
-      // ✅ เข้าสู่ระบบสำเร็จ
       Swal.fire({
         icon: "success",
         title: "เข้าสู่ระบบสำเร็จ 🎉",
         text: `ยินดีต้อนรับ ${data.user.name || data.user.email}`,
         confirmButtonColor: "#16a34a",
       }).then(() => {
-        router.push("/homepage") // redirect ไปหน้า home
+        router.push("/homepage")
       })
     } catch (err) {
       console.error(err)
@@ -83,6 +82,11 @@ export default function LoginPage() {
         confirmButtonColor: "#f97316",
       })
     }
+  }
+
+  // 🚀 ฟังก์ชันเข้าสู่ระบบด้วย Google
+  const handleGoogleLogin = () => {
+    window.location.href = "/api/auth/google"
   }
 
   return (
@@ -145,6 +149,22 @@ export default function LoginPage() {
             เข้าสู่ระบบ
           </Button>
         </form>
+
+        {/* ปุ่มเข้าสู่ระบบด้วย Google */}
+        <div className="mt-4">
+          <Button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full flex items-center justify-center gap-2 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 rounded-lg shadow-sm transition-all"
+          >
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="Google Icon"
+              className="w-5 h-5"
+            />
+            เข้าสู่ระบบด้วย Google
+          </Button>
+        </div>
 
         {/* ลิงก์เพิ่มเติม */}
         <div className="text-center text-gray-600 mt-6 text-sm space-y-2">
