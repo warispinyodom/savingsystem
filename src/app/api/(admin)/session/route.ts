@@ -35,7 +35,7 @@ export async function GET(req: Request) {
     }
 
     // 🔹 ตรวจสอบ roles ว่าเป็น array หรือ string
-    let roles: string | string[] = user.roles || "user";
+    const roles: string | string[] = user.roles || "user";
 
     // ✅ ส่งข้อมูลผู้ใช้กลับ client รวม roles
     return NextResponse.json({
