@@ -15,8 +15,13 @@ export default function ShowMembersCard() {
         if (!res.ok) throw new Error("ไม่สามารถดึงข้อมูลสมาชิกได้");
         const data = await res.json();
         setCount(data.count);
-      } catch (err: any) {
-        setError(err.message || "เกิดข้อผิดพลาด");
+      } catch (err: unknown) {
+        // ตรวจสอบชนิดของ error ก่อนเข้าถึง message
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("เกิดข้อผิดพลาดไม่ทราบสาเหตุ");
+        }
       } finally {
         setLoading(false);
       }
